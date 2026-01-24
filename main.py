@@ -76,6 +76,38 @@ def get_performance_mode_cmd():
     return build_wmi_buffer(WMIMethodType.GET, WMIMethodName.SystemPerMode)
 
 
+def get_gpu_mode_cmd():
+    return build_wmi_buffer(WMIMethodType.GET, WMIMethodName.GPUMode)
+
+
+def get_kbd_led_cmd():
+    return build_wmi_buffer(WMIMethodType.GET, WMIMethodName.RGBKeyboardBrightness)
+
+
+def get_kbd_type_cmd():
+    return build_wmi_buffer(WMIMethodType.GET, WMIMethodName.KeyboardType)
+
+
+def get_rbg_kbd_color_cmd():
+    return build_wmi_buffer(WMIMethodType.GET, WMIMethodName.RGBKeyboardColor)
+
+
+def get_rbg_kbd_mode_cmd():
+    return build_wmi_buffer(WMIMethodType.GET, WMIMethodName.RGBKeyboardMode)
+
+
+def get_max_fan_speed_cmd():
+    return build_wmi_buffer(WMIMethodType.GET, WMIMethodName.MaxFanSpeed)
+
+
+def get_max_fan_speed_state_cmd():
+    return build_wmi_buffer(WMIMethodType.GET, WMIMethodName.MaxFanSpeedSwitch)
+
+
+def get_fan_speeds_cmd():
+    return build_wmi_buffer(WMIMethodType.GET, WMIMethodName.CPUGPUSYSFanSpeed)
+
+
 def set_performance_mode_cmd(mode: WMISystemPerMode):
     return build_wmi_buffer(WMIMethodType.SET, WMIMethodName.SystemPerMode, int(mode))
 
@@ -301,6 +333,9 @@ def main():
         mode_raw = parse_raw_response(acpi_call(get_performance_mode_cmd()))
         mode_val = get_single_value(mode_raw)
 
+        gpu_mode_raw = parse_raw_response(acpi_call(get_gpu_mode_cmd()))
+        gpu_mode_val = get_single_value(gpu_mode_raw)
+
         # get fan speed
         fan_raw = parse_raw_response(
             acpi_call(
@@ -317,6 +352,7 @@ def main():
         print(f"--- System Status ---")
         print(f"Performance Mode: {mode_val} (Refer to WMISystemPerMode)")
         print(f"Temperature:      {temp}°C")
+        print(f"GPU Mode:      {gpu_mode_val}")
         print(f"CPU Fan Speed:    {fans[0]} RPM")
         print(f"GPU Fan Speed:    {fans[1]} RPM")
         print(f"SYS Fan Speed:    {fans[2]} RPM")
