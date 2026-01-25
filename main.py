@@ -80,6 +80,10 @@ def get_gpu_mode_cmd():
     return build_wmi_buffer(WMIMethodType.GET, WMIMethodName.GPUMode)
 
 
+def get_ac_mode_cmd():
+    return build_wmi_buffer(WMIMethodType.GET, WMIMethodName.SystemAcType)
+
+
 def get_kbd_led_cmd():
     return build_wmi_buffer(WMIMethodType.GET, WMIMethodName.RGBKeyboardBrightness)
 
@@ -209,6 +213,9 @@ def acpi_call(buffer_bytes):
     # \_SB.PCI0.WMID.WMAA 0 1 b<bytes>
     cmd = f"\\_SB.PCI0.WMID.WMAA 0 1 b{buffer_bytes.hex()}"
 
+    # print("======")
+    # print("cmd=" + cmd)
+
     try:
         # write to /proc/acpi/call interface
         with open("/proc/acpi/call", "w") as f:
@@ -217,6 +224,8 @@ def acpi_call(buffer_bytes):
         # read response
         with open("/proc/acpi/call", "r") as f:
             result = f.read().strip("\x00").strip()
+        # print("res=" + result)
+        # print("====")
         return result
     except FileNotFoundError:
         return "Error: acpi_call module not loaded"
@@ -336,6 +345,9 @@ def main():
         gpu_mode_raw = parse_raw_response(acpi_call(get_gpu_mode_cmd()))
         gpu_mode_val = get_single_value(gpu_mode_raw)
 
+        ac_mode_raw = parse_raw_response(acpi_call(get_ac_mode_cmd()))
+        ac_mode_val = get_single_value(gpu_mode_raw)
+
         # get fan speed
         fan_raw = parse_raw_response(
             acpi_call(
@@ -353,6 +365,7 @@ def main():
         print(f"Performance Mode: {mode_val} (Refer to WMISystemPerMode)")
         print(f"Temperature:      {temp}°C")
         print(f"GPU Mode:      {gpu_mode_val}")
+        print(f"AC Mode: {ac_mode_val}")
         print(f"CPU Fan Speed:    {fans[0]} RPM")
         print(f"GPU Fan Speed:    {fans[1]} RPM")
         print(f"SYS Fan Speed:    {fans[2]} RPM")
