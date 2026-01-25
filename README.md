@@ -2,7 +2,7 @@
 
 ## Need a kernel space version?
 
-Please visit the [LKML](https://lkml.org/lkml/2026/1/24/324) page
+Please visit the [mailing list](https://lore.kernel.org/lkml/20260125071501.12616-1-qby140326@gmail.com/T/#u) page
 
 I'm not sure the will be accepted or not, but this works fine on my computer
 
